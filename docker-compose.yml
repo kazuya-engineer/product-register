@@ -1,0 +1,37 @@
+version: '3'
+
+#db-dataを作成する。(volumesで指定したデータはコンテナ削除後も残る。)
+volumes:
+  db-data:
+
+services:
+  web:
+    #カレントディレクトリのDockerfileにてbuildを行う。
+    build: .
+    #portの指定。(railsの初期portの3000を設定。)
+    ports:
+      - '3000:3000'
+    volumes:
+      - '.:/product-register'
+    #コンテナ内の環境変数の指定。指定する値も本当はホストの環境変数のほうがよい。
+    environment:
+      - 'DATABASE_PASSWORD=postgres'
+    #これがdocker -it と同じ役割になる
+    tty: true
+    stdin_open: true
+    #depens_onで指定したコンテナができたらdocker_runする形になる。(dbが先にbuildされる)
+    depends_on:
+      - db
+    #webからdbを参照できるようになる。
+    links:
+      - db
+
+  db:
+    #imageはDockerfileからではなくimageファイルを直接指定する。
+    image: postgres
+    #db-dataに/var/lib/postgresql/dataをマウントする。(コンテナ削除後もデータ残すため)
+    volumes:
+      - 'db-data:/var/lib/postgresql/data'
+    environment:
+      - 'POSTGRES_USER=postgres'
+      - 'POSTGRES_PASSWORD=postgres'

@@ -28,7 +28,7 @@ jobs:
     #dockerファイルイメージを指定する。(CircleCIではdocker推奨)
     docker:
       - image: circleci/ruby:2.5
-      - image: circleci/postgres:11.13
+      - image: circleci/postgres:11.13-alpine
       #環境変数を設定する。
       environment:
         POSTGRES_PASSWORD: postgres

@@ -1,30 +1,62 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
+#CircleCIのバージョン設定
 version: 2.1
 
-# Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
-# See: https://circleci.com/docs/2.0/orb-intro/
+#ジョブの事前定義の処理(orbsはCircleCIの設定のパッケージ。version2.1からの追加機能)
 orbs:
-  ruby: circleci/ruby@0.1.2
+  ruby: circleci/ruby@1.1.2
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
+#workflowsからこちらのjobsが読みだされる
 jobs:
+  #workflowsにて指定したjobのbuildが実行される(jobの名前は任意で付けられるがjobが一つだけの場合は「build」とつけなければならない)
   build:
+    #dockerファイルイメージを指定する。(CircleCIではdocker推奨)
     docker:
       - image: circleci/ruby:2.5
-    executor: ruby/default
+    #working_directoryにてstepsを実行する際のディレクトリを指定。
+    working_directory: ~/product-register
+    #docker以外の実行するタスク(ステップ)のリストを記載。
     steps:
+      #working_directoryにリポジトリをプル(展開)する。
       - checkout
-      - run:
-          name: Which bundler?
-          command: bundle -v
-      - ruby/bundle-install
+        #こちらのパスはworkking_directoryからの相対パスで設定。(デフォルトは「.」。今回は記載しなくてもよさそう。)
+        path: ~/product-register
+      #Orb - circleci/rubyで定義されるコマンド。Bundlerを使用してGemをインストールする。
+      - ruby/install-deps
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+  #workflowsにて指定したjobsの「build」が正常に実行されたら実行される。
+  test:
+    #dockerファイルイメージを指定する。(CircleCIではdocker推奨)
+    docker:
+      -image: circleci/ruby:2.5
+      -image: circleci/postgres:11.13
+      #環境変数を設定する。
+      environment:
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_USER: postgres
+      #working_directoryにてstepsを実行する際のディレクトリを指定。
+      working_directory: ~/product-register
+      #docker以外の実行するタスク(ステップ)のリストを記載。
+      steps:
+        #working_directoryにリポジトリをプル(展開)する。
+        - checkout:
+          path: ~/product-register
+        - ruby/install-deps
+        #runはコマンドの実行
+        - run:
+          #nameはrunコマンドにつける任意の名前
+          name: Databese setup
+          #commandはrunで実行するコマンド
+          command: bundle exec rails db:migrate
+        - run:
+          name: test
+          command: bundle exec rake test
+
+#こちらのworkflowsから上記のbuildとtestを実行している(workflowsは上部の実行順序を定義する。)
 workflows:
-  sample: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
-    jobs:
-      - build
+  version: 2
+  build_and_test:
+  jobs:
+    - build
+    - test:
+       requires:
+        - build

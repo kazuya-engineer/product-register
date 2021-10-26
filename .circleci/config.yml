@@ -17,7 +17,7 @@ jobs:
     #docker以外の実行するタスク(ステップ)のリストを記載。
     steps:
       #working_directoryにリポジトリをプル(展開)する。
-      - checkout
+      - checkout:
         #こちらのパスはworkking_directoryからの相対パスで設定。(デフォルトは「.」。今回は記載しなくてもよさそう。)
         path: ~/product-register
       #Orb - circleci/rubyで定義されるコマンド。Bundlerを使用してGemをインストールする。

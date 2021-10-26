@@ -29,27 +29,27 @@ jobs:
     docker:
       - image: circleci/ruby:2.5
       - image: circleci/postgres:11.13-alpine
-      #環境変数を設定する。
-      environment:
-        POSTGRES_PASSWORD: postgres
-        POSTGRES_USER: postgres
+        #環境変数を設定する。
+        environment:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
       #working_directoryにてstepsを実行する際のディレクトリを指定。
-      working_directory: ~/product-register
-      #docker以外の実行するタスク(ステップ)のリストを記載。
-      steps:
-        #working_directoryにリポジトリをプル(展開)する。
-        - checkout:
-          path: ~/product-register
-        - ruby/install-deps
-        #runはコマンドの実行
-        - run:
-          #nameはrunコマンドにつける任意の名前
-          name: Databese setup
-          #commandはrunで実行するコマンド
-          command: bundle exec rails db:migrate
-        - run:
-          name: test
-          command: bundle exec rake test
+    working_directory: ~/product-register
+    #docker以外の実行するタスク(ステップ)のリストを記載。
+    steps:
+      #working_directoryにリポジトリをプル(展開)する。
+      - checkout:
+        path: ~/product-register
+      - ruby/install-deps
+      #runはコマンドの実行
+      - run:
+        #nameはrunコマンドにつける任意の名前
+        name: Databese setup
+        #commandはrunで実行するコマンド
+        command: bundle exec rails db:migrate
+      - run:
+        name: test
+        command: bundle exec rake test
 
 #こちらのworkflowsから上記のbuildとtestを実行している(workflowsは上部の実行順序を定義する。)
 workflows:

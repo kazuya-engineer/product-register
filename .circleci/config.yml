@@ -39,7 +39,7 @@ jobs:
     steps:
       #working_directoryにリポジトリをプル(展開)する。
       - checkout:
-        path: ~/product-register
+          path: ~/product-register
       - ruby/install-deps
       #runはコマンドの実行
       - run:

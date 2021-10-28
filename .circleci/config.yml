@@ -19,7 +19,7 @@ jobs:
       #working_directoryにリポジトリをプル(展開)する。
       - checkout:
         #こちらのパスはworkking_directoryからの相対パスで設定。(デフォルトは「.」。今回は記載しなくてもよさそう。)
-        path: ~/product-register
+          path: ~/product-register
       #Orb - circleci/rubyで定義されるコマンド。Bundlerを使用してGemをインストールする。
       - ruby/install-deps
 

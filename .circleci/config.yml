@@ -9,7 +9,7 @@ orbs:
 jobs:
   #workflowsにて指定したjobのbuildが実行される(jobの名前は任意で付けられるがjobが一つだけの場合は「build」とつけなければならない)
   build:
-    #dockerファイルイメージを指定する。(CircleCIではdocker推奨)
+    #dockerファイルイメージを指定する。(CircleCIではdocker推奨)※dockerhubにimageあるか要確認
     docker:
       - image: circleci/ruby:2.5
     #working_directoryにてstepsを実行する際のディレクトリを指定。
@@ -25,10 +25,10 @@ jobs:
 
   #workflowsにて指定したjobsの「build」が正常に実行されたら実行される。
   test:
-    #dockerファイルイメージを指定する。(CircleCIではdocker推奨)
+    #dockerファイルイメージを指定する。(CircleCIではdocker推奨)※dockerhubにimageあるか要確認
     docker:
       - image: circleci/ruby:2.5
-      - image: circleci/postgres:11.13-alpine
+      - image: circleci/postgres:10.13
         #環境変数を設定する。
         environment:
           POSTGRES_PASSWORD: postgres

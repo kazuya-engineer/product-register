@@ -44,12 +44,12 @@ jobs:
       #runはコマンドの実行
       - run:
         #nameはrunコマンドにつける任意の名前
-        name: Databese setup
-        #commandはrunで実行するコマンド
-        command: bundle exec rails db:migrate
+          name: Databese setup
+          #commandはrunで実行するコマンド
+          command: bundle exec rails db:migrate
       - run:
-        name: test
-        command: bundle exec rake test
+          name: test
+          command: bundle exec rake test
 
 #こちらのworkflowsから上記のbuildとtestを実行している(workflowsは上部の実行順序を定義する。)
 workflows:

@@ -4,6 +4,7 @@ version: 2.1
 #ジョブの事前定義の処理(orbsはCircleCIの設定のパッケージ。version2.1からの追加機能)
 orbs:
   ruby: circleci/ruby@1.1.2
+  node: circleci/node@3.0.1
 
 #workflowsからこちらのjobsが読みだされる
 jobs:

@@ -11,7 +11,7 @@ jobs:
   build:
     #dockerファイルイメージを指定する。(CircleCIではdocker推奨)※dockerhubにimageあるか要確認
     docker:
-      - image: circleci/ruby:2.5
+      - image: circleci/ruby:2.5-node
     #working_directoryにてstepsを実行する際のディレクトリを指定。
     working_directory: ~/product-register
     #docker以外の実行するタスク(ステップ)のリストを記載。
@@ -22,12 +22,16 @@ jobs:
           path: ~/product-register
       #Orb - circleci/rubyで定義されるコマンド。Bundlerを使用してGemをインストールする。
       - ruby/install-deps
+      #javascriptの実行環境が必要なため、node.jsをインストールする。
+      - node/install-packages: 
+          pkg-manager: yarn
+          cache-key: "yarn.lock"
 
   #workflowsにて指定したjobsの「build」が正常に実行されたら実行される。
   test:
     #dockerファイルイメージを指定する。(CircleCIではdocker推奨)※dockerhubにimageあるか要確認
     docker:
-      - image: circleci/ruby:2.5
+      - image: circleci/ruby:2.5-node
       - image: circleci/postgres:10.13
         #環境変数を設定する。
         environment:
@@ -41,6 +45,10 @@ jobs:
       - checkout:
           path: ~/product-register
       - ruby/install-deps
+      #javascriptの実行環境が必要なため、node.jsをインストールする。
+      - node/install-packages: 
+          pkg-manager: yarn
+          cache-key: "yarn.lock"
       #runはコマンドの実行
       - run:
         #nameはrunコマンドにつける任意の名前

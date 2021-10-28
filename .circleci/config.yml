@@ -25,7 +25,6 @@ jobs:
       #javascriptの実行環境が必要なため、node.jsをインストールする。
       - node/install-packages: 
           pkg-manager: yarn
-          cache-key: "yarn.lock"
 
   #workflowsにて指定したjobsの「build」が正常に実行されたら実行される。
   test:
@@ -48,7 +47,6 @@ jobs:
       #javascriptの実行環境が必要なため、node.jsをインストールする。
       - node/install-packages: 
           pkg-manager: yarn
-          cache-key: "yarn.lock"
       #runはコマンドの実行
       - run:
         #nameはrunコマンドにつける任意の名前
